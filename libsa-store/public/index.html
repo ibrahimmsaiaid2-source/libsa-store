@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIBSA — لبسة كتحكي بلادك</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+<!-- ============ Header ============ -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="logo">LIBSA<span class="logo-dot">.</span></div>
+    <nav class="rack" id="rack">
+      <button class="pill is-active" data-cat="الكل">الكل</button>
+      <button class="pill" data-cat="نسائي">نسائي</button>
+      <button class="pill" data-cat="رجالي">رجالي</button>
+      <button class="pill" data-cat="أحذية">أحذية</button>
+      <button class="pill" data-cat="إكسسوارات">إكسسوارات</button>
+    </nav>
+    <button class="cart-btn" id="cartBtn">
+      <span>السلة</span>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ Hero ============ -->
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow">مجموعة الموسم — الدفع عند الاستلام</p>
+      <h1>لبسة<br>كتحكي<br><em>بلادك</em>.</h1>
+      <p class="hero-sub">قطع مختارة بعناية، خيوط وألوان مغربية أصيلة، توصيل لجميع المدن مع الدفع عند الاستلام.</p>
+      <a href="#shop" class="btn-primary">شوف المجموعة</a>
+    </div>
+    <div class="hero-swatches" aria-hidden="true">
+      <div class="swatch-card sc1"><span class="tagline">جلابة</span></div>
+      <div class="swatch-card sc2"><span class="tagline">قفطان</span></div>
+      <div class="swatch-card sc3"><span class="tagline">أحذية</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Shop Grid ============ -->
+<main class="wrap" id="shop">
+  <div class="section-head">
+    <h2>المجموعة الكاملة</h2>
+    <span class="stitch-line" aria-hidden="true"></span>
+  </div>
+  <div class="grid" id="productGrid"><!-- JS يعمر هنا --></div>
+</main>
+
+<!-- ============ Footer ============ -->
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div>
+      <div class="logo">LIBSA<span class="logo-dot">.</span></div>
+      <p class="foot-note">الدفع عند الاستلام · توصيل داخل كل المدن المغربية</p>
+    </div>
+    <p class="foot-note">© 2026 LIBSA — جميع الحقوق محفوظة</p>
+  </div>
+</footer>
+
+<!-- ============ Quick View Modal ============ -->
+<div class="overlay" id="overlay"></div>
+<div class="modal" id="productModal">
+  <button class="modal-close" id="modalClose" aria-label="سد">✕</button>
+  <div class="modal-body" id="modalBody"><!-- JS يعمر هنا --></div>
+</div>
+
+<!-- ============ Cart / Checkout Panel ============ -->
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-head">
+    <h3>الطلب ديالك</h3>
+    <button class="modal-close" id="cartClose" aria-label="سد">✕</button>
+  </div>
+
+  <div class="cart-items" id="cartItems"><!-- JS يعمر هنا --></div>
+
+  <div class="cart-total-row">
+    <span>المجموع</span>
+    <span class="mono" id="cartTotal">0 د.م.</span>
+  </div>
+
+  <form id="checkoutForm" class="checkout-form">
+    <p class="form-hint">دير معلوماتك باش نأكدو الطلب ونتصلو بيك:</p>
+    <label>الاسم الكامل
+      <input type="text" name="fullName" required placeholder="مثال: أيوب الإدريسي">
+    </label>
+    <label>رقم الهاتف
+      <input type="tel" name="phone" required placeholder="06XXXXXXXX" pattern="[0-9+ ]{9,15}">
+    </label>
+    <label>المدينة
+      <input type="text" name="city" required placeholder="مثال: الدار البيضاء">
+    </label>
+    <label>العنوان بالتفصيل
+      <input type="text" name="address" required placeholder="الحي، الزنقة، رقم...">
+    </label>
+    <button type="submit" class="btn-primary btn-full" id="confirmBtn">تأكيد الطلب</button>
+    <p class="form-status" id="formStatus"></p>
+  </form>
+</div>
+
+<script src="products.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
