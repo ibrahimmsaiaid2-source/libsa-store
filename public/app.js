@@ -7,7 +7,7 @@
 // خليه http://https://4w4hxqz6-3000.uks1.devtunnels.ms/
 ///api/orders، وفاش ترفع السيت للإنترنت
 // بدلو برابط السيرفر ديالك (مثلا فـ Render).
-const API_BASE = "https://libsa-store-2d93.vercel.app/api/orders";
+const API_BASE = "/api/orders";
 const state = {
   activeCat: "الكل",
   cart: []
