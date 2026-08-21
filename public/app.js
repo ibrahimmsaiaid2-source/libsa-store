@@ -217,11 +217,9 @@ function closeCart() {
 cartBtn.addEventListener("click", openCart);
 cartClose.addEventListener("click", closeCart);
 
-// ---------- checkout submit ----------
 checkoutForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  
-  const confirmBtn = checkoutForm.querySelector("button[type='submit']");
+
   confirmBtn.disabled = true;
   confirmBtn.textContent = "جاري الإرسال...";
 
@@ -233,12 +231,32 @@ checkoutForm.addEventListener("submit", async (e) => {
   const city = document.getElementById("city")?.value || "";
   const address = document.getElementById("address")?.value || "";
 
+  // قراءة السلة والمجموع مباشرة من state.cart
+  let cartText = "\n📦 *المنتجات المطلوبة:*\n";
+  let total = 0;
+
+  if (state.cart && state.cart.length > 0) {
+    state.cart.forEach((item, index) => {
+      const itemTotal = item.price * item.qty;
+      total += itemTotal;
+      const details = [];
+      if (item.size) details.push(`المقاس: ${item.size}`);
+      if (item.color) details.push(`اللون: ${item.color}`);
+      const extra = details.length ? ` (${details.join(', ')})` : '';
+
+      cartText += `${index + 1}. *${item.name}*${extra}\n   الكمية: ${item.qty} × ${item.price} د.م. = *${itemTotal} د.م.*\n`;
+    });
+  } else {
+    cartText += "لم يتم تحديد أي منتج.\n";
+  }
+
   let msg = `🛒 *طلب جديد من المتجر!*\n\n`;
   msg += `👤 *الاسم:* ${fullName}\n`;
   msg += `📞 *الهاتف:* ${phone}\n`;
   msg += `🏙️ *المدينة:* ${city}\n`;
-  msg += `📍 *العنوان:* ${address}\n\n`;
-  msg += `💰 *المجموع:* ${state.totalPrice || 0} د.م.`;
+  msg += `📍 *العنوان:* ${address}\n`;
+  msg += cartText;
+  msg += `\n💰 *المجموع الإجمالي:* ${total} د.م.`;
 
   try {
     const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
@@ -252,7 +270,7 @@ checkoutForm.addEventListener("submit", async (e) => {
     });
 
     if (res.ok) {
-      formStatus.textContent = "✅ تم تأكيد طلبك! سنتصل بك قريباً";
+      formStatus.textContent = "✅ تم تأكيد طلبك بنجاح!";
       formStatus.className = "ok";
       state.cart = [];
       renderCart();
@@ -268,7 +286,3 @@ checkoutForm.addEventListener("submit", async (e) => {
     confirmBtn.textContent = "تأكيد الطلب";
   }
 });
-
-// ---------- init ----------
-renderGrid();
-renderCart();
