@@ -226,25 +226,28 @@ checkoutForm.addEventListener("submit", async (e) => {
   const TELEGRAM_TOKEN = "7785100043:AAHAwPe59TbpC5yupUWQYPsajaS6Fl1dcqM";
   const TELEGRAM_CHAT_ID = "5497811236";
 
-  const fullName = document.getElementById("fullName")?.value || "";
-  const phone = document.getElementById("phone")?.value || "";
-  const city = document.getElementById("city")?.value || "";
-  const address = document.getElementById("address")?.value || "";
+  const fullName = document.getElementById("name")?.value || document.getElementById("fullName")?.value || "";
+  const phone = document.getElementById("phone")?.value || document.getElementById("customerPhone")?.value || "";
+  const city = document.getElementById("city")?.value || document.getElementById("customerCity")?.value || "";
+  const address = document.getElementById("address")?.value || document.getElementById("customerAddress")?.value || "";
 
-  // قراءة السلة والمجموع مباشرة من state.cart
   let cartText = "\n📦 *المنتجات المطلوبة:*\n";
   let total = 0;
 
-  if (state.cart && state.cart.length > 0) {
-    state.cart.forEach((item, index) => {
-      const itemTotal = item.price * item.qty;
+  const currentCart = (typeof state !== 'undefined' && state.cart) ? state.cart : (typeof cart !== 'undefined' ? cart : []);
+
+  if (currentCart && currentCart.length > 0) {
+    currentCart.forEach((item, index) => {
+      const price = item.price || 0;
+      const qty = item.qty || item.quantity || 1;
+      const itemTotal = price * qty;
       total += itemTotal;
       const details = [];
       if (item.size) details.push(`المقاس: ${item.size}`);
       if (item.color) details.push(`اللون: ${item.color}`);
       const extra = details.length ? ` (${details.join(', ')})` : '';
 
-      cartText += `${index + 1}. *${item.name}*${extra}\n   الكمية: ${item.qty} × ${item.price} د.م. = *${itemTotal} د.م.*\n`;
+      cartText += `${index + 1}. *${item.name || item.title}*${extra}\n   الكمية: ${qty} × ${price} د.م. = *${itemTotal} د.م.*\n`;
     });
   } else {
     cartText += "لم يتم تحديد أي منتج.\n";
@@ -272,8 +275,9 @@ checkoutForm.addEventListener("submit", async (e) => {
     if (res.ok) {
       formStatus.textContent = "✅ تم تأكيد طلبك بنجاح!";
       formStatus.className = "ok";
-      state.cart = [];
-      renderCart();
+      if (typeof state !== 'undefined' && state.cart) state.cart = [];
+      if (typeof cart !== 'undefined') cart = [];
+      if (typeof renderCart === 'function') renderCart();
       checkoutForm.reset();
     } else {
       throw new Error("Telegram error");
