@@ -290,3 +290,8 @@ checkoutForm.addEventListener("submit", async (e) => {
     confirmBtn.textContent = "تأكيد الطلب";
   }
 });
+document.addEventListener("DOMContentLoaded", () => {
+  if (typeof renderGrid === "function") {
+    renderGrid();
+  }
+});
