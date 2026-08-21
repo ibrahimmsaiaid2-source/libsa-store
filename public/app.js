@@ -220,45 +220,49 @@ cartClose.addEventListener("click", closeCart);
 // ---------- checkout submit ----------
 checkoutForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  formStatus.textContent = "";
-  formStatus.className = "form-status";
-
-  if (state.cart.length === 0) {
-    formStatus.textContent = "زيد شي منتج للسلة قبل ما تأكد الطلب.";
-    formStatus.classList.add("err");
-    return;
-  }
-
-  const fd = new FormData(checkoutForm);
-  const order = {
-    fullName: fd.get("fullName"),
-    phone: fd.get("phone"),
-    city: fd.get("city"),
-    address: fd.get("address"),
-    items: state.cart,
-    total: state.cart.reduce((s, it) => s + it.price * it.qty, 0)
-  };
-
+  
+  const confirmBtn = checkoutForm.querySelector("button[type='submit']");
   confirmBtn.disabled = true;
-  confirmBtn.textContent = "كنأكدو الطلب...";
+  confirmBtn.textContent = "جاري الإرسال...";
+
+  const TELEGRAM_TOKEN = "7785100043:AAHAwPe59TbpC5yupUWQYPsajaS6Fl1dcqM";
+  const TELEGRAM_CHAT_ID = "5497811236";
+
+  const fullName = document.getElementById("fullName")?.value || "";
+  const phone = document.getElementById("phone")?.value || "";
+  const city = document.getElementById("city")?.value || "";
+  const address = document.getElementById("address")?.value || "";
+
+  let msg = `🛒 *طلب جديد من المتجر!*\n\n`;
+  msg += `👤 *الاسم:* ${fullName}\n`;
+  msg += `📞 *الهاتف:* ${phone}\n`;
+  msg += `🏙️ *المدينة:* ${city}\n`;
+  msg += `📍 *العنوان:* ${address}\n\n`;
+  msg += `💰 *المجموع:* ${state.totalPrice || 0} د.م.`;
 
   try {
-    const res = await fetch(API_BASE, {
+    const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(order)
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: msg,
+        parse_mode: "Markdown"
+      })
     });
-    if (!res.ok) throw new Error("server error");
 
-    formStatus.textContent = "تم تأكيد طلبك ✅ غنتصلو بيك قريباً!";
-    formStatus.classList.add("ok");
-    state.cart = [];
-    renderCart();
-    checkoutForm.reset();
+    if (res.ok) {
+      formStatus.textContent = "✅ تم تأكيد طلبك! سنتصل بك قريباً";
+      formStatus.className = "ok";
+      state.cart = [];
+      renderCart();
+      checkoutForm.reset();
+    } else {
+      throw new Error("Telegram error");
+    }
   } catch (err) {
-    // السيرفر ماشي خدام دابا (محلي ولا فالإنترنت) — راجع README.md
-    formStatus.textContent = "ماقدرناش نأكدو الطلب. تأكد بلي السيرفر (server.js) خدام، شوف README.md.";
-    formStatus.classList.add("err");
+    formStatus.textContent = "❌ حدث خطأ أثناء الإرسال، حاول مجدداً.";
+    formStatus.className = "err";
   } finally {
     confirmBtn.disabled = false;
     confirmBtn.textContent = "تأكيد الطلب";
