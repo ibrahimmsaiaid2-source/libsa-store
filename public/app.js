@@ -253,7 +253,7 @@ checkoutForm.addEventListener("submit", async (e) => {
     cartText += "لم يتم تحديد أي منتج.\n";
   }
 
-  let msg = `🛒 *طلب جديد من المتجر!*\n\n`;
+ let msg = `🛒 *طلب جديد من متجر IHDIH SHOP!*\n\n`;
   msg += `👤 *الاسم:* ${fullName}\n`;
   msg += `📞 *الهاتف:* ${phone}\n`;
   msg += `🏙️ *المدينة:* ${city}\n`;
